@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Weather Data</title>
+</head>
+<body style="background-repeat: no-repeat;background-size:cover ;" >
+    <div class="outerContainer" style="height: 100vh;width: 100vw; display: flex;justify-content: center;align-items: flex-start; font-family: 'roboto', Calibri,  sans-serif;">
+    <div class="container"  style="display: flex;flex-direction:column; align-items: center;justify-content: center;padding: 14px 45px;;
+    background-color: rgb(255, 255, 255);
+    border-radius: 20px; ">
+
+        <h1>Weather Info</h1>
+   <div  style="display: flex;align-items: center; justify-content:center; " ><p id="temperature" style="font-size: 8vw;font-weight: bold;">Loading...</p> <img id="rain" style="width:10rem;margin: 4rem;" src="" alt="" ></div> 
+    <p id="humidity" style="font-size: 2.5vw;">Humidity: Loading...</p>
+    </div>
+</div>
+    
+
+    <script>
+        
+            fetch("/getData")  // Assuming this URL corresponds to your Flask route
+                .then(response => response.json())
+                .then(data => {
+                    const temperature = data.Temperature.toFixed(1)
+                    const humidity = data.Humidity.toFixed(1)
+                    const rainImage="StaticFiles/rain.jpg"
+                    const sunImage="StaticFiles/sunny.png"
+                    const rainyday = "url('/StaticFiles/rainyday.jpg')";
+                    const sunnyday = "url('/StaticFiles/sunnyday.jpg')";
+                    document.getElementById("temperature").textContent = `${temperature}°C`;
+                    document.getElementById("humidity").textContent = `Humidity: ${humidity}%`;
+                    imageElement=  document.getElementById("rain") 
+                    bodyElm=document.body
+
+                    imageElement.setAttribute("src", `${data.Rain ? rainImage : sunImage}`)
+                    bodyElm.style.backgroundImage = `${data.Rain ? rainyday : sunnyday}`;
+                  
+                })
+                .catch(error => {
+                    console.error("Error fetching data:", error);
+                });
+        
+    </script>
+</body>
+</html>
